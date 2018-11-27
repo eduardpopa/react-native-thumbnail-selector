@@ -14,7 +14,7 @@ A Flatlist thumbnail selector that animates from the bottom by default.
 ### Props
 | Name | Type | Description | Default |
 | --- | :---: | --- | --- |
-| ```items``` | **Required** Array of objects with key  | (i.e.`[{key: 0, title: 'Brian', borderColor: 'white', imageUri: 'http://path/to/image.png', selected: false}]`) | []
+| ```items``` | **Required** Array of objects with key  | (i.e.`[{key: 0, title: 'Brian', borderColor: 'white', imageUri: 'http://path/to/image.png'or provide image:require(./image.jpg), selected: false}]`) | []
 | ```visible``` | Bool  | show or hide selector | false
 | ```backgroundColor``` | String  | backgroundColor of Flatlist | false
 | ```loadMore``` | Func  | Callback to load more items at the end of the list | null

@@ -1,17 +1,8 @@
-import React, {Component} from 'react';
-import {
-  Text,
-  FlatList,
-  Image,
-  TouchableOpacity,
-  Animated,
-  Dimensions,
-  ViewPropTypes,
-  View,
-} from 'react-native';
-import PropTypes from 'prop-types';
-const {height, width} = Dimensions.get('window');
-const WINDOW = Dimensions.get('window');
+import React, { Component } from "react";
+import { Text, FlatList, Image, TouchableOpacity, Animated, Dimensions, ViewPropTypes, View } from "react-native";
+import PropTypes from "prop-types";
+const { height, width } = Dimensions.get("window");
+const WINDOW = Dimensions.get("window");
 
 export default class ThumbnailSelector extends Component {
   static propTypes = {
@@ -29,12 +20,12 @@ export default class ThumbnailSelector extends Component {
     flatlistProps: PropTypes.func,
     containerStyle: ViewPropTypes.style,
     itemContainerStyle: ViewPropTypes.style,
-    loadMore: PropTypes.func,
+    loadMore: PropTypes.func
   };
   static defaultProps = {
     items: null,
     opacity: 0.8,
-    backgroundColor: 'dimgray',
+    backgroundColor: "dimgray",
     onSelectedData: null,
     closeOnSelect: true,
     zIndex: 1000,
@@ -43,35 +34,35 @@ export default class ThumbnailSelector extends Component {
     visible: false,
     loadMore: null,
     containerStyle: {
-      position: 'absolute',
-      bottom: 0,
+      position: "absolute",
+      bottom: 0
     },
     itemContainerStyle: {
-      flexDirection: 'column',
+      flexDirection: "column",
       paddingLeft: 8,
       paddingRight: 8,
       paddingTop: 8,
-      alignItems: 'center',
+      alignItems: "center"
     },
     captionTextStyle: {
-      color: 'white',
-      fontFamily: 'Avenir',
+      color: "white",
+      fontFamily: "Avenir",
       fontSize: 16,
-      textAlign: 'center',
+      textAlign: "center"
     },
     thumbnailImageStyle: {
       width: 125,
       height: 125,
       borderWidth: 2,
       borderRadius: 2,
-      borderColor: 'white',
+      borderColor: "white"
     },
-    flatlistProps: null,
+    flatlistProps: null
   };
   constructor(props) {
     super(props);
     if (props.items && props.items.length === 0) {
-      console.warn('ThumbnailSelector Items prop: Requires least one item.');
+      console.warn("ThumbnailSelector Items prop: Requires least one item.");
     }
     this.state = {
       fadeAnim: new Animated.Value(0),
@@ -79,17 +70,17 @@ export default class ThumbnailSelector extends Component {
       visible: false,
       startDelta: WINDOW.height + 155,
       endDelta: 0,
-      duration: 600,
+      duration: 600
     };
   }
   componentDidMount() {
-    const {visible} = this.props;
+    const { visible } = this.props;
     if (visible) {
       this.show();
     }
   }
   componentWillReceiveProps(nextProps) {
-    const {visible, items} = this.props;
+    const { visible, items } = this.props;
     if (nextProps.visible !== visible) {
       if (nextProps.visible) {
         this.show();
@@ -99,7 +90,7 @@ export default class ThumbnailSelector extends Component {
     }
     if (nextProps.items.length > items.length) {
       this.setState({
-        items: nextProps.items,
+        items: nextProps.items
       });
     }
   }
@@ -115,22 +106,22 @@ export default class ThumbnailSelector extends Component {
     Animated.timing(this.state.fadeAnim, {
       toValue: toValue,
       duration: this.state.duration,
-      friction: 7,
+      friction: 7
     }).start();
   };
   timeOutForisVisible = visible => {
     setTimeout(
       function() {
         this.setState({
-          visible: visible,
+          visible: visible
         });
       }.bind(this),
-      this.state.duration,
+      this.state.duration
     );
   };
   scrollToSelected = () => {
     var index = 0;
-    const {items} = this.state;
+    const { items } = this.state;
     for (var i = 0; i < items.length; i++) {
       var item = items[i];
       if (item.selected) {
@@ -139,14 +130,14 @@ export default class ThumbnailSelector extends Component {
       }
     }
     if (index > 0) {
-      this.flatList.scrollToIndex({index: index});
+      this.flatList.scrollToIndex({ index: index });
     }
   };
   onLayoutEvent = event => {
-    const {x, y, width, height} = event.nativeEvent.layout;
+    const { x, y, width, height } = event.nativeEvent.layout;
     this.setState({
       startDelta: WINDOW.height + height,
-      endDelta: 0,
+      endDelta: 0
     });
   };
   itemAction = (item, index) => {
@@ -156,7 +147,7 @@ export default class ThumbnailSelector extends Component {
     }
     item.selected = true;
     this.setState({
-      items: items,
+      items: items
     });
     if (this.props.onSelectedItem) {
       this.props.onSelectedItem(item);
@@ -166,12 +157,12 @@ export default class ThumbnailSelector extends Component {
         function() {
           this.hide();
         }.bind(this),
-        this.props.closeOnSelectInterval,
+        this.props.closeOnSelectInterval
       );
     }
   };
   onEndReached = () => {
-    const {flatlistProps, loadMore} = this.props;
+    const { flatlistProps, loadMore } = this.props;
     if (flatlistProps) {
       if (flatlistProps.onEndReached) {
         flatlistProps.onEndReached();
@@ -182,54 +173,30 @@ export default class ThumbnailSelector extends Component {
       loadMore();
     }
   };
-  renderItem = ({item, index}) => {
-    const {
-      itemContainerStyle,
-      captionTextStyle,
-      thumbnailImageStyle,
-      numberOfLines,
-      opacity,
-    } = this.props;
+  renderItem = ({ item, index }) => {
+    const { itemContainerStyle, captionTextStyle, thumbnailImageStyle, numberOfLines, opacity } = this.props;
     return (
       <TouchableOpacity onPress={() => this.itemAction(item, index)}>
-        <View
-          style={[itemContainerStyle, {opacity: item.selected ? 1 : opacity}]}
-        >
-          {this.renderImage(item.imageUri, thumbnailImageStyle, item.selected)}
-          {this.renderText(
-            item.title,
-            captionTextStyle,
-            numberOfLines,
-            item.selected,
-          )}
+        <View style={[itemContainerStyle, { opacity: item.selected ? 1 : opacity }]}>
+          {this.renderImage(item, thumbnailImageStyle, item.selected)}
+          {this.renderText(item.title, captionTextStyle, numberOfLines, item.selected)}
         </View>
       </TouchableOpacity>
     );
   };
-  renderImage(imageUri, style, selected) {
-    return (
-      <Image
-        style={[
-          style,
-          {borderColor: selected ? style.borderColor : 'transparent'},
-        ]}
-        source={{uri: imageUri}}
-      />
-    );
+  renderImage(item, style, selected) {
+    return <Image style={[style, { borderColor: selected ? style.borderColor : "transparent" }]} source={item.image ? item.image : { uri: item.imageUri }} />;
   }
   renderText(text, style, numberOfLines, selected) {
     return (
-      <Text
-        style={[style, {fontWeight: selected ? 'bold' : 'normal'}]}
-        numberOfLines={numberOfLines}
-      >
+      <Text style={[style, { fontWeight: selected ? "bold" : "normal" }]} numberOfLines={numberOfLines}>
         {text}
       </Text>
     );
   }
   render() {
-    const {startDelta, endDelta, fadeAnim, dataSource, items} = this.state;
-    const {zIndex, backgroundColor, flatlistProps, containerStyle} = this.props;
+    const { startDelta, endDelta, fadeAnim, dataSource, items } = this.state;
+    const { zIndex, backgroundColor, flatlistProps, containerStyle } = this.props;
     return (
       <Animated.View
         style={[
@@ -240,16 +207,15 @@ export default class ThumbnailSelector extends Component {
               {
                 translateY: fadeAnim.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [startDelta, endDelta],
-                }),
-              },
-            ],
-          },
-        ]}
-      >
+                  outputRange: [startDelta, endDelta]
+                })
+              }
+            ]
+          }
+        ]}>
         <FlatList
-          ref={ref => this.flatList = ref}
-          style={{backgroundColor: backgroundColor, flex: 1}}
+          ref={ref => (this.flatList = ref)}
+          style={{ backgroundColor: backgroundColor, flex: 1 }}
           data={items}
           horizontal={true}
           renderItem={this.renderItem}
